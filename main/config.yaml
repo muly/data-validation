@@ -1,0 +1,23 @@
+validationrules:
+- 
+  name: Id
+  pattern: "[0-9]"
+  condition: "> 100 AND < 9999"
+
+-
+  name: ServerName
+  pattern: "[a-z]"
+  length: "< 15"
+
+-
+  name: HostName
+  pattern: "[a-zA-Z]"
+  length: "< 15"
+
+-
+  name: IP
+  pattern: IP
+
+-
+  name: Date
+  pattern: MM-DD-YYYY HH:SS
