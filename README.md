@@ -10,15 +10,15 @@
 - in the same JSON response, there is a part that lists of error files which failed because of invalid format or if it is not a XLSX file
 
 ##Deployment notes:
-1) Assumption: make sure you have the go installed and configured in the environment.
-2) Dependencies: install the dependencies using the below commands
-	go get gopkg.in/yaml.v2
-	go get github.com/tealeg/xlsx
-3) download the code from "https://github.com/muly/data-validation" and extract to the folder "github.com/muly/data-validation" on your src folder of the go workspace (as configured in the GOPATH env variable
-4) Temporary location for storing excel files on the server (which are uploaded) is configured using the env variable. 
-- the name of the env variable is SrvDtaValidTmp as used in the code, 
-- however, this environment variable can be changed by changing the value of the constant SrvTmpDst in the helpers/handler.go file.
-5) the path of the configuration file to be saved is the same where the main executable of the service is placed. and the file name of the config file should be "config.yaml"
+1. Assumption: that go installed and configured in the environment.
+2. Dependencies: install the dependencies using the below commands  
+  - go get gopkg.in/yaml.v2  
+  - go get github.com/tealeg/xlsx  
+3. download the code from "https://github.com/muly/data-validation" and extract to the folder "github.com/muly/data-validation" on your src folder of the go workspace (as configured in the GOPATH env variable
+4. Temporary location for storing excel files on the server (which are uploaded) is configured using the env variable. 
+   - the name of the env variable is SrvDtaValidTmp as used in the code, 
+   - however, this environment variable can be changed by changing the value of the constant SrvTmpDst in the helpers/handler.go file.
+5. the path of the configuration file to be saved is the same where the main executable of the service is placed. and the file name of the config file should be "config.yaml"
 
 	
 	
@@ -54,28 +54,30 @@ the yaml format used is close to "Sequence of Mappings" as described in the exam
 
 
 ##Scope of improvement and known issues:
-1) comments are added in the code to cover the documentation of the code. these comments can be optimized to be go doc friendly, so that go doc generates the proper documentation.
-2) unit test functions are written to cover most of the cases, but can always be expanded to cover more possible cases. right now the code coverage is 46.2% (as checked on 2015/09/20)
-3) error handling is done to handle most of the errors, but can always be expanded to cover more.
-4) right now, the YAML parsing is within the handler function that handles the validation of XLSX file. this means, the YAML parsing is done every time client sends a XLSX file, which is redundant. The YAMLparsing can be changed to one time process and then pass the parsed YAML data to each validation request to validate  against.
-5) Panic: right now all the server error are using PANIC. These can be handled/changed to use a logging mechanism.
-6) the json response is complex, and can be simplified to make it easy for the consumers to use.
-7) validation rules supported:
-	* only <= >= != < > == comparative operators are supported
-	* only two conditions are supported combined either using AND or OR.
-	* more complex expression are not supported
-8) right now excel with atleast 5 column are accepted. if there are more than 5 column, first 5 are considered. and if there are less than 5 fields, the file is ignored, and is listed under error files json response
-9) once the file is processed, the temporary copy on the server is deleted. but in case if the file is not a valid XLSX file (or has less number of fields than expected (5)), then the file on the server is not deleted. this needs to be fixed.
+1. comments are added in the code to cover the documentation of the code. these comments can be optimized to be go doc friendly, so that go doc generates the proper documentation.
+2. unit test functions are written to cover most of the cases, but can always be expanded to cover more possible cases. right now the code coverage is 46.2% (as checked on 2015/09/20)
+3. error handling is done to handle most of the errors, but can always be expanded to cover more.
+4. right now, the YAML parsing is within the handler function that handles the validation of XLSX file. this means, the YAML parsing is done every time client sends a XLSX file, which is redundant. The YAMLparsing can be changed to one time process and then pass the parsed YAML data to each validation request to validate  against.
+5. Panic: right now all the server error are using PANIC. These can be handled/changed to use a logging mechanism.
+6. the json response is complex, and can be simplified to make it easy for the consumers to use.
+7. validation rules supported:  
+   - only <= >= != < > == comparative operators are supported  
+   - only two conditions are supported combined either using AND or OR.  
+   - more complex expression are not supported  
+8. right now excel with atleast 5 column are accepted. if there are more than 5 column, first 5 are considered. and if there are less than 5 fields, the file is ignored, and is listed under error files json response
+9. once the file is processed, the temporary copy on the server is deleted. but in case if the file is not a valid XLSX file (or has less number of fields than expected (5)), then the file on the server is not deleted. this needs to be fixed.
 
 
 
 ##testing:
 ### Unit testing
 Unit tests are written to cover most of the generic functions that doesn't involve in files.
+
 ###Environments testing:
 Successfully tested the code in Windows (Windows 7 64 bit) aswell as Linux (Ubuntu 14.04.3 LTS 64 bit) environments.
+
 ### Overall testing:
-sample excel XLSX file (can be found in the examples folder) is prepared with multiple records, each with a possible combination of valid and invalid cases. the resulting 
+sample excel XLSX file (can be found in the "example" folder) is prepared with multiple records, each with a possible combination of valid and invalid cases. this excel is used to do the testing
 
 
 
