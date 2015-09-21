@@ -2,11 +2,11 @@
 
 
 ##Overview 
-- this is a REST endpoint/API which accept the multipart file as input. the excel format supported is XLSX. 
-- the given excel file is uploaded into a temporary folder on the server, and validates each cell in the file row by row
-- for validation rules, a predefined yaml file (saved on server side) is been used. the rules are loaded from the yaml file and applied on the data
-- once the validation is done, the validation response JSON is returned back to client with the list of records that deviate from the rules
-- in the same JSON response, there is a part that lists of error files which failed because of invalid format or if it is not a XLSX file
+- This is a REST API endpoint which accept the multipart file as input. the excel format supported is XLSX. 
+- The given excel file is uploaded into a temporary folder on the server, and validates each cell in the file row by row
+- For validation rules, a predefined yaml file (saved on server side) is been used. the rules are loaded from the yaml file and applied on the data
+- Once the validation is done, the validation response JSON is returned back to client with the list of records that deviate from the rules
+- In the same JSON response, there is a part that lists of error files which failed because of invalid format or if it is not a XLSX file
 
 
 ##Deployment notes
@@ -14,11 +14,11 @@
 2. Dependencies: install the dependencies using the below commands  
   - go get gopkg.in/yaml.v2  
   - go get github.com/tealeg/xlsx  
-3. download the code from "https://github.com/muly/data-validation" and extract to the folder "github.com/muly/data-validation" on your src folder of the go workspace (as configured in the GOPATH env variable
-4. Temporary location for storing excel files on the server (which are uploaded) is configured using the env variable. 
-   - the name of the env variable is SrvDtaValidTmp as used in the code, 
-   - however, this environment variable can be changed by changing the value of the constant SrvTmpDst in the helpers/handler.go file.
-5. the path of the configuration file to be saved is the same where the main executable of the service is placed. and the file name of the config file should be "config.yaml"
+3. download the code from "https://github.com/muly/data-validation" and extract it to the folder "github.com/muly/data-validation" on your src folder of the go workspace (as configured in the GOPATH env variable)
+4. Temporary location for storing the uploaded excel files on the server is configured using the env variable called "SrvDtaValidTmp" 
+   - update this environment variable to the path on the server where you want to keep the uploaded files 
+   - for any reason if you have to use a different environment variable, it can be changed by changing the value of the constant SrvTmpDst in the helpers/handler.go file.
+5. the path of the configuration YAML file to be saved is the same where the main executable of the service is placed. and the file name should be "config.yaml"
 
 	
 ##Code organization
