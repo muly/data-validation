@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	//	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -22,14 +23,19 @@ type Response struct {
 	ValidationErrors []ValidationFlags `json:"validation"`
 }
 
+type Data struct {
+	FileDetails
+	Data []map[string]string `json:"fileData"`
+}
+
 type ErrResponse struct {
 	FileName string `json:"fileName"`
 	Error    string `json:"error"`
 }
 
 type FileDetails struct {
-	ClientFileName string
-	SrvrFileName   string
+	ClientFileName string `json:"fileNameAtClient"`
+	SrvrFileName   string `json:"fileNameAtServer"`
 }
 
 // the function GetRules() prepares validation rules from YAML config file.
@@ -87,6 +93,28 @@ func Upload(r *http.Request) (filesList []FileDetails, err error) {
 		// register the file being uploaded: its original name and the unique name saved as on the server
 		filesList = append(filesList, FileDetails{src.FileName(), SrvrFileName})
 
+	}
+
+	return
+}
+
+// the function Load(); given the files list, will just load the excel file into go variable.
+func Load(fileName string) (d []map[string]string, err error) {
+
+	// load the XLSX file stored on server into a 2D slice (slice of slice)
+	data, err := readXLSX(fileName)
+	if err != nil {
+		return
+	}
+
+	// for each row in the 2D slice,
+	for n, r := range data {
+		m := map[string]string{}
+		for i, _ := range r {
+			m[data[0][i]] = data[n][i]
+			//d[n][data[0][i]] = c //data[n][i]
+		}
+		d = append(d, m)
 	}
 
 	return

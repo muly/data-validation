@@ -9,7 +9,7 @@ import (
 	"os"
 	//"time"
 
-	"github.com/muly/JIOPOC/helpers"
+	"github.com/muly/data-validation/helpers"
 )
 
 func main() {
@@ -18,7 +18,42 @@ func main() {
 	fmt.Println("YAML config file is picked from the same path on server as that of the executable of this service")
 
 	http.HandleFunc("/validate", handleUpldVldt)
+	http.HandleFunc("/upload", handleUpld)
 	http.ListenAndServe("localhost:8080", nil)
+
+}
+
+func handleUpld(w http.ResponseWriter, r *http.Request) {
+
+	//// Upload xlsx
+	filesList, err := helpers.Upload(r)
+	if err != nil { //Note: this is a 5XX error
+		panic(err.Error())
+		return
+	}
+
+	res := []helpers.Data{}
+
+	for _, f := range filesList {
+
+		d, err := helpers.Load(f.SrvrFileName)
+		if err != nil {
+			fmt.Println("ERROR ERROR with helpers.Load()", err.Error())
+			panic(err.Error())
+			return
+		}
+		fmt.Println(d)
+
+		data := helpers.Data{
+			FileDetails: helpers.FileDetails{f.ClientFileName, f.SrvrFileName},
+			Data:        d,
+		}
+		res = append(res, data)
+	}
+
+	//// send Response:
+	jsonRes, _ := json.Marshal(res)  // prepare the combined response as json and
+	fmt.Fprintln(w, string(jsonRes)) //send it back to client
 
 }
 
